@@ -4,6 +4,10 @@ const app = express();
 
 const port = 8123;
 
+app.get('/', (req, res) => {
+  res.status(200).json({ msg: 'OK' });
+});
+
 app.get('/questions', (req, res) => {
   console.log('req');
   res.status(200).json({
