@@ -2,7 +2,7 @@ import express from 'express';
 
 const app = express();
 
-const port = 8123;
+const port = process.env.PORT || 8123;
 
 app.get('/', (req, res) => {
   res.status(200).json({ msg: 'OK' });
