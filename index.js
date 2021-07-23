@@ -8,6 +8,12 @@ app.get('/', (req, res) => {
   res.status(200).json({ msg: 'OK' });
 });
 
+app.get('/version', (req, res) => {
+  res.status(200).json({
+    version: 1,
+  });
+});
+
 app.get('/questions', (req, res) => {
   console.log('req');
   res.status(200).json({
