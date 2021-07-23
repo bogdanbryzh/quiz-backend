@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
 
 app.get('/version', (req, res) => {
   res.status(200).json({
-    version: 1,
+    version: 2,
   });
 });
 
