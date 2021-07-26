@@ -37,10 +37,11 @@ Version.findOne({}, (err, version) => {
 import { router as questionsRoutes } from './routes/questions.js';
 import { router as versionRoute } from './routes/version.js';
 
-app.use('/', (req, res) => {
-  res.redirect(301, 'https://editor.bogdanbryzh.me');
-});
+
 app.use('/questions', questionsRoutes);
 app.use('/version', versionRoute);
+app.get('/', (req, res) => {
+  res.redirect(301, 'https://editor.bogdanbryzh.me');
+});
 
 app.listen(port, () => console.log(`server is running`));
