@@ -1,5 +1,6 @@
 import express from 'express';
 import helmet from 'helmet';
+import cors from 'cors';
 import mongoose from 'mongoose';
 import { MONGODB_URI } from './config.js';
 import { VersionModel as Version } from './models/Version.js';
@@ -20,6 +21,7 @@ const port = process.env.PORT;
 const app = express();
 
 app.use(helmet());
+app.use(cors());
 app.use(express.json());
 
 Version.findOne({}, (err, version) => {
@@ -36,7 +38,6 @@ Version.findOne({}, (err, version) => {
 
 import { router as questionsRoutes } from './routes/questions.js';
 import { router as versionRoute } from './routes/version.js';
-
 
 app.use('/questions', questionsRoutes);
 app.use('/version', versionRoute);
