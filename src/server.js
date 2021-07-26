@@ -1,7 +1,5 @@
 import express from 'express';
-import morgan from 'morgan';
 import helmet from 'helmet';
-import { join, resolve } from 'path';
 import mongoose from 'mongoose';
 import { MONGODB_URI } from './config.js';
 import { VersionModel as Version } from './models/Version.js';
@@ -23,7 +21,6 @@ const app = express();
 
 app.use(helmet());
 app.use(express.json());
-app.use(morgan('dev'));
 
 Version.findOne({}, (err, version) => {
   if (err) {
