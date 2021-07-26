@@ -25,8 +25,6 @@ app.use(helmet());
 app.use(express.json());
 app.use(morgan('dev'));
 
-app.use(express.static(join(resolve(), 'public')));
-
 Version.findOne({}, (err, version) => {
   if (err) {
     return console.log(err);
@@ -42,6 +40,9 @@ Version.findOne({}, (err, version) => {
 import { router as questionsRoutes } from './routes/questions.js';
 import { router as versionRoute } from './routes/version.js';
 
+app.use('/', (req, res) => {
+  res.redirect(301, 'https://editor.bogdanbryzh.me');
+});
 app.use('/questions', questionsRoutes);
 app.use('/version', versionRoute);
 
