@@ -1,13 +1,24 @@
 {
   "name": "quiz-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.js",
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "node index"
+    "start": "node src/server.js",
+    "dev": "PORT=3123 nodemon ."
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "cors": "^2.8.5",
+    "deepmerge": "^4.2.2",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "helmet": "^4.6.0",
+    "mongoose": "^5.13.3",
+    "nanoid": "^3.1.23"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.12"
   }
 }
