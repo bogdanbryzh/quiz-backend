@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { join, resolve } from 'path';
 import mongoose from 'mongoose';
 import { MONGODB_URI } from './config.js';
+import { VersionModel as Version } from './models/Version.js';
 
 mongoose.connect(
   MONGODB_URI,
@@ -26,17 +27,22 @@ app.use(morgan('dev'));
 
 app.use(express.static(join(resolve(), 'public')));
 
-import { router as questionsRoutes } from './routes/questions.js';
-
-app.use('/questions', questionsRoutes);
-app.use('/version', (req, res) => {
-  // combine two sources: patch - when question get updated and minor - when new question added or deleted
-  // major version update only when deleted all questions and started from scratch
-  // all part of semver updates incrementally
-  const major = 1;
-  const minor = 0;
-  const patch = 0;
-  res.status(200).json({ version: major + '.' + minor + '.' + patch });
+Version.findOne({}, (err, version) => {
+  if (err) {
+    return console.log(err);
+  }
+  if (version) {
+    const { major, minor, patch } = version;
+    return console.log('questions version', `${major}.${minor}.${patch}`);
+  }
+  const newVersion = new Version({ major: 1, minor: 0, patch: 0 });
+  newVersion.save();
 });
 
-app.listen(port, () => console.log(`http://localhost:${port}`));
+import { router as questionsRoutes } from './routes/questions.js';
+import { router as versionRoute } from './routes/version.js';
+
+app.use('/questions', questionsRoutes);
+app.use('/version', versionRoute);
+
+app.listen(port, () => console.log(`server is running`));

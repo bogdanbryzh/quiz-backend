@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { QuestionModel as Question } from '../models/Question.js';
+import { VersionModel as Version } from '../models/Version.js';
 import mongoose from 'mongoose';
 const { ObjectId } = mongoose.Types;
 
@@ -11,6 +12,31 @@ const isValidObjectId = id => {
     return false;
   }
   return false;
+};
+
+const updateVersion = (type = 'patch') => {
+  console.log('updating');
+  Version.findOneAndUpdate(
+    {},
+    type === 'patch'
+      ? {
+          $inc: { patch: 1 },
+        }
+      : type === 'minor'
+      ? {
+          $inc: { minor: 1 },
+          patch: 0,
+        }
+      : type === 'major'
+      ? { $inc: { major: 1 }, minor: 0, patch: 0 }
+      : {},
+    { useFindAndModify: false, new: true },
+    err => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+    }
+  );
 };
 
 router.use('/:questionID', (req, res, next) => {
@@ -57,6 +83,8 @@ router.post('/', (req, res) => {
 
   question.save();
 
+  updateVersion('minor');
+
   res
     .status(201)
     .location(
@@ -78,6 +106,7 @@ router.patch('/:questionID', (req, res) => {
         return res.status(500).json({ error: err.message });
       }
       if (question) {
+        updateVersion();
         return res.status(200).json(question);
       }
       res.status(404).json({ error: 'Question not found' });
@@ -86,10 +115,12 @@ router.patch('/:questionID', (req, res) => {
 });
 
 router.delete('/', (req, res) => {
-  Question.deleteMany({}, (err, smth) => {
+  Question.deleteMany({}, err => {
     if (err) {
       return res.status(500).json({ error: err });
     }
+
+    updateVersion('major');
 
     res.status(204).send();
   });
@@ -98,12 +129,12 @@ router.delete('/', (req, res) => {
 router.delete('/:questionID', (req, res) => {
   const { questionID } = res.locals;
 
-  Question.findOneAndDelete({ _id: questionID }, (err, smth) => {
+  Question.findOneAndDelete({ _id: questionID }, (err, question) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    console.log(smth);
-    if (smth) {
+    if (question) {
+      updateVersion('minor');
       return res.status(204).send();
     }
     res.status(404).json({ error: 'Question not found' });
