@@ -13,7 +13,6 @@ router.get('/', (req, res) => {
     }
     if (version) {
       const { major, minor, patch } = version;
-      console.log(version);
       return res.status(200).json({ version: `${major}.${minor}.${patch}` });
     }
     res.status(400).json({ error: 'I dunno. Something went wrong' });
