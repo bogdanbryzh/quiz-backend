@@ -8,10 +8,8 @@ const QuestionSchema = Schema({
   },
   answers: [
     {
-      answer: {
-        type: String,
-        correct: Boolean,
-      },
+      answer: String,
+      correct: Boolean,
     },
   ],
 });
