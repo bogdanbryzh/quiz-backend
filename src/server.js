@@ -12,7 +12,7 @@ mongoose.connect(
     useUnifiedTopology: true,
   },
   err => {
-    if (err) return console.error(err);
+    if (err) throw err;
     console.log('connected to db');
   }
 );
@@ -22,7 +22,7 @@ const app = express();
 
 app.use(helmet());
 app.use(cors());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 Version.findOne({}, (err, version) => {
